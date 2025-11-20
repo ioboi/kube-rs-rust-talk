@@ -106,7 +106,7 @@ impl Website {
                         "containers": [
                             {
                                 "name": "nginx",
-                                "image": "nginx:1.27",
+                                "image": "nginx:1.29",
                                 "ports": [ { "containerPort": 80 } ],
                                 "volumeMounts": [
                                     {
