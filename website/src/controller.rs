@@ -73,7 +73,10 @@ impl Website {
             .await
             .expect("unable to create cm");
 
-        let sha256_sum = Sha256::digest(content);
+        let sha256_sum: String = Sha256::digest(content)
+            .iter()
+            .map(|b|format!("{:02x}", b))
+            .collect();
 
         let deployment_api: Api<Deployment> = Api::namespaced(client.clone(), &ns);
 
@@ -99,7 +102,7 @@ impl Website {
                             "app": name
                         },
                         "annotations": {
-                            "checksum/index": format!("{:X}", sha256_sum)
+                            "checksum/index": sha256_sum
                         }
                     },
                     "spec": {
