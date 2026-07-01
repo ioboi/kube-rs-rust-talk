@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, sync::Arc, time::Duration};
 use futures::StreamExt;
 use k8s_openapi::api::{
     apps::v1::Deployment,
-    core::v1::{ConfigMap, Pod, Service},
+    core::v1::{ConfigMap, Service},
 };
 use kube::{
     api::{ObjectMeta, Patch, PatchParams},
@@ -201,12 +201,12 @@ pub async fn run() {
 
     let website_api: Api<Website> = Api::all(client.clone());
     let deployment_api: Api<Deployment> = Api::all(client.clone());
-    let pod_api: Api<Pod> = Api::all(client.clone());
+    let cm_api: Api<ConfigMap> = Api::all(client.clone());
     let svc_api: Api<Service> = Api::all(client.clone());
 
     Controller::new(website_api, Config::default().any_semantic())
         .owns(deployment_api, Default::default())
-        .owns(pod_api, Default::default())
+        .owns(cm_api, Default::default())
         .owns(svc_api, Default::default())
         .shutdown_on_signal()
         .run(reconcile, error_policy, Arc::new(Context { client }))
